@@ -1,0 +1,19 @@
+plugins {
+    id 'android-lib-conventions'
+    id 'kotlinx-serialization'
+}
+
+android {
+    namespace = 'dev.alejandrorosas.leaguepedia'
+}
+
+dependencies {
+    api project(":features:leaguepedia-contract")
+
+    implementation project(":core")
+
+    implementation libs.retrofit
+    implementation libs.retrofit.kotlinx.serialization
+    implementation libs.kotlinx.serialization
+    implementation libs.okhttp
+}

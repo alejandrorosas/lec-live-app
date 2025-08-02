@@ -1,0 +1,17 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.name = 'LEC Live'
+includeBuild 'build-conventions'
+include ':app'
+include ':core'
+include ':features:strings'
+include ':features:schedule'
+include ':features:results'
+include ':features:leaguepedia'
+include ':features:leaguepedia-contract'

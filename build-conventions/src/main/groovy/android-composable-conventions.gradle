@@ -1,0 +1,30 @@
+plugins {
+    id 'android-conventions'
+    id 'org.jetbrains.kotlin.plugin.compose'
+    id 'com.android.compose.screenshot'
+}
+
+android {
+    buildFeatures {
+        compose = true
+    }
+
+    experimentalProperties["android.experimental.enableScreenshotTest"] = true
+}
+
+dependencies {
+    implementation libs.androidx.hilt.navigation.compose
+
+    implementation libs.compose.ui
+    implementation libs.compose.ui.livedata
+    implementation libs.compose.ui.tooling
+    implementation libs.compose.material
+    implementation libs.compose.navigation
+    implementation libs.lifecycle.viewmodel.compose
+
+    androidTestImplementation libs.compose.ui.test.junit
+    androidTestImplementation libs.compose.ui.test.manifest
+
+    screenshotTestImplementation libs.screenshot.validation.api
+    screenshotTestImplementation libs.compose.ui.tooling
+}
