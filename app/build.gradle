@@ -1,0 +1,66 @@
+plugins {
+    alias(libs.plugins.android.application)
+    id 'android-composable-conventions'
+    id 'com.github.triplet.play'
+}
+
+android {
+    namespace = 'dev.alejandrorosas.leclive.app'
+
+    defaultConfig {
+        applicationId "dev.alejandrorosas.leclive"
+
+        versionCode 7
+        versionName "0.0.1-dev"
+    }
+
+    packagingOptions {
+        exclude "META-INF/AL2.0"
+        exclude "META-INF/LGPL2.1"
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file("debug.keystore")
+            storePassword "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
+        }
+
+        release {
+            storeFile file("upload-keystore.jks")
+            storePassword System.getenv("SIGNING_RELEASE_STORE_PASSWORD")
+            keyAlias System.getenv("SIGNING_RELEASE_KEY_ALIAS")
+            keyPassword System.getenv("SIGNING_RELEASE_KEY_PASSWORD")
+        }
+    }
+
+    buildTypes {
+        debug {
+            signingConfig = signingConfigs.debug
+        }
+        release {
+            signingConfig = signingConfigs.release
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+        }
+    }
+}
+
+play {
+    track.set("production") // defaults to internal
+    defaultToAppBundles.set(true)
+}
+
+dependencies {
+    implementation project(":core")
+    implementation project(':features:results')
+    implementation project(':features:schedule')
+    implementation project(":features:leaguepedia")
+    implementation project(":features:strings")
+
+    implementation libs.kotlin
+    implementation libs.appcompat
+    implementation libs.androidx.hilt.navigation
+    implementation libs.coil.compose
+}

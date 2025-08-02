@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">LEC Live</string>
+    <string name="screenname_schedule">Calendario</string>
+    <string name="screenname_results">Resultados</string>
+    <string name="match_best_of">Mejor de %1$d</string>
+</resources>
