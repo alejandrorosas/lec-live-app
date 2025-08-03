@@ -169,17 +169,20 @@ jobs:
       - name: Setup Keystore
         env:
           ENCODED_KEYSTORE: ${{ secrets.SIGNING_RELEASE_STORE_FILE }}
-        run: |
-          echo $ENCODED_KEYSTORE | base64 -di > app/upload-keystore.jks
+        run: echo $ENCODED_KEYSTORE | base64 -di > app/upload-keystore.jks
 
-      - name: Release
+      - name: Publish app listing to Google Play
+        env: 
+          ANDROID_PUBLISHER_CREDENTIALS: ${{ secrets.ANDROID_PUBLISHER_CREDENTIALS }}
+        run: ./gradlew publishListing --track production
+
+      - name: Publish app bundle to Google Play
         env:
           SIGNING_RELEASE_KEY_ALIAS: ${{ secrets.SIGNING_RELEASE_KEY_ALIAS }}
           SIGNING_RELEASE_KEY_PASSWORD: ${{ secrets.SIGNING_RELEASE_KEY_PASSWORD }}
           SIGNING_RELEASE_STORE_PASSWORD: ${{ secrets.SIGNING_RELEASE_STORE_PASSWORD }}
           ANDROID_PUBLISHER_CREDENTIALS: ${{ secrets.ANDROID_PUBLISHER_CREDENTIALS }}
-
-        run: ./gradlew publishBundle
+        run: ./gradlew publishBundle --track production
 
   post-release:
     runs-on: ubuntu-latest

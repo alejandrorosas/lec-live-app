@@ -47,11 +47,6 @@ android {
     }
 }
 
-play {
-    track.set("production") // defaults to internal
-    defaultToAppBundles.set(true)
-}
-
 dependencies {
     implementation project(":core")
     implementation project(':features:results')
