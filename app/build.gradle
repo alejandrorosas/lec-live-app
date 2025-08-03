@@ -10,8 +10,8 @@ android {
     defaultConfig {
         applicationId "dev.alejandrorosas.leclive"
 
-        versionCode 10
-        versionName "0.2.0-dev"
+        versionCode 11
+        versionName "0.2.1-dev"
     }
 
     packagingOptions {
