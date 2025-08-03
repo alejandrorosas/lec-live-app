@@ -2,8 +2,6 @@ package dev.alejandrorosas.schedule.di
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
 import androidx.navigation.compose.composable
 import dagger.Module
 import dagger.Provides
@@ -30,10 +28,10 @@ class ScheduleModule {
     @Provides
     @IntoSet
     fun provideStandingsBottomNavigationItem() =
-        object : BottomNavigationItem {
-            override val position = 2
-            override val route = "schedule"
-            override val label = string.screenname_schedule
-            override val icon = Icons.Default.DateRange
-        }
+        BottomNavigationItem(
+            position = 2,
+            route = "schedule",
+            label = string.screenname_schedule,
+            icon = Icons.Default.DateRange,
+        )
 }

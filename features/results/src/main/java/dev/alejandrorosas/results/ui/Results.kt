@@ -15,9 +15,11 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -45,20 +47,34 @@ fun Screen(
 ) {
     val homeUiState by resultsViewModel.uiState.collectAsState()
 
+    val standings = remember(homeUiState.standings) { homeUiState.standings }
+
     PullToRefreshBox(
         modifier = modifier,
         isRefreshing = homeUiState.isRefreshing,
-        onRefresh = { resultsViewModel.refresh() },
+        onRefresh = resultsViewModel::refresh,
+        state = rememberPullToRefreshState(),
     ) {
-        LazyColumn(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(),
-        ) {
-            items(homeUiState.standings) { ResultsItem(it) }
-            item { Spacer(modifier = Modifier.padding(24.dp)) }
-        }
+        ResultsList(
+            items = standings,
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@Composable
+fun ResultsList(
+    items: List<ResultsViewModel.Standings>,
+    modifier: Modifier = Modifier,
+) {
+    LazyColumn(
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .fillMaxHeight(),
+    ) {
+        items(items) { ResultsItem(it) }
+        item { Spacer(modifier = Modifier.padding(24.dp)) }
     }
 }
 
