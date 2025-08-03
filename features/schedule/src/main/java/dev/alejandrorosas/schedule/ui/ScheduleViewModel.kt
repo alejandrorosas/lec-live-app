@@ -4,12 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.alejandrorosas.leaguepedia.contract.LeaguepediaClient
+import dev.alejandrorosas.strings.getReadableDateString
+import dev.alejandrorosas.strings.getReadableTimeString
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,7 +30,8 @@ class ScheduleViewModel @Inject constructor(
         val team1VSteam2Score: String,
         val team1Image: String?,
         val team2Image: String?,
-        val date: LocalDateTime,
+        val date: String,
+        val time: String,
         val winner: Int?,
         val bestOf: Int?,
         val tab: String,
@@ -73,7 +75,8 @@ class ScheduleViewModel @Inject constructor(
                                             } else {
                                                 "${match.team1Score} - ${match.team2Score}"
                                             },
-                                        date = match.date,
+                                        date = match.date.toLocalDate().getReadableDateString(),
+                                        time = match.date.getReadableTimeString(),
                                         winner = match.winner,
                                         bestOf = match.bestOf,
                                         tab = match.tab,
