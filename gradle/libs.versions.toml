@@ -14,7 +14,7 @@ kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref =
 appcompat = { group = "androidx.appcompat", name = "appcompat", version = "1.7.1" }
 dagger = { group = "com.google.dagger", name = "dagger", version.ref = "dagger" }
 dagger-compiler = { group = "com.google.dagger", name = "dagger-compiler", version.ref = "dagger" }
-androidx-core = { group = "androidx.core", name = "core-ktx", version = "1.16.0" }
+androidx-core = { group = "androidx.core", name = "core-ktx", version = "1.17.0" }
 kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.9.0" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version = "5.1.0" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version = "2.7.0" }
