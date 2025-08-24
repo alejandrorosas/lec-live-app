@@ -4,11 +4,15 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    labels:
+      - dependencies
   - package-ecosystem: gradle
     directory: "/"
     schedule:
       interval: "daily"
       time: "06:00"
+    labels:
+      - dependencies
     registries: "*"
     open-pull-requests-limit: 10
     groups:
