@@ -49,26 +49,25 @@ jobs:
             const matchingLabels = prLabels.filter(label => validLabels.has(label.name));
 
             if (matchingLabels.length !== 1) {
-              const description = `One of the following labels is required: ${[...validLabels].join(', ')}. Found ${matchingLabels.length} matching labels.`;
+              const description = `One of the following labels is required: ${[...validLabels].join(', ')}. Found ${matchingLabels.length}.`;
               await github.rest.repos.createCommitStatus({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
+                ...context.repo,
                 sha: context.payload.pull_request.head.sha,
                 state: 'failure',
                 description: description,
-                context: 'Versioning Label',
+                context: 'Required Label Check',
+                target_url: `https://github.com/${owner}/${repo}/actions/runs/${context.runId}`,
               });
               core.setFailed(description);
             } else {
               const labelName = matchingLabels[0].name;
               const description = `Found valid label: "${labelName}".`;
               await github.rest.repos.createCommitStatus({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
+                ...context.repo,
                 sha: context.payload.pull_request.head.sha,
                 state: 'success',
                 description: description,
-                context: 'Versioning Label',
+                context: 'Required Label Check',
               });
               console.log(`Success: ${description}`);
             }
