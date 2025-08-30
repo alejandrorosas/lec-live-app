@@ -9,17 +9,21 @@ on:
       - labeled
       - unlabeled
 
-permissions:
-  pull-requests: write
-
 jobs:
   label-check:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: ${{ vars.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+
       - name: Remove semver labels from Dependabot PRs
         if: github.actor == 'dependabot[bot]'
         uses: actions/github-script@v7
         with:
+          github-token: ${{ steps.app-token.outputs.token }}
           script: |
             const semverLabels = ['major', 'minor', 'patch'];
             const prNumber = context.payload.pull_request.number;
@@ -37,6 +41,7 @@ jobs:
       - name: Check for exactly one version label
         uses: actions/github-script@v7
         with:
+          github-token: ${{ steps.app-token.outputs.token }}
           script: |
             const validLabels = ['major', 'minor', 'patch', 'dependencies', 'skip-changelog'];
             const prLabels = context.payload.pull_request.labels;
@@ -44,7 +49,26 @@ jobs:
             const matchingLabels = prLabels.filter(label => validLabels.has(label.name));
 
             if (matchingLabels.length !== 1) {
-              core.setFailed(`One of the following labels is required: ${[...validLabels].join(', ')}. Found ${matchingLabels.length} matching labels.`);
+              const description = `One of the following labels is required: ${[...validLabels].join(', ')}. Found ${matchingLabels.length} matching labels.`;
+              await github.rest.repos.createCommitStatus({
+                context.repo.owner,
+                context.repo.repo,
+                context.payload.pull_request.head.sha,
+                state: 'failure',
+                description: description,
+                context: 'Versioning Label',
+              });
+              core.setFailed(description);
             } else {
-              console.log(`Success: Found exactly one valid label: "${matchingLabels[0].name}".`);
+              const labelName = matchingLabels[0].name;
+              const description = `Found valid label: "${labelName}".`;
+              await github.rest.repos.createCommitStatus({
+                context.repo.owner,
+                context.repo.repo,
+                context.payload.pull_request.head.sha,
+                state: 'success',
+                description: description,
+                context: 'Versioning Label',
+              });
+              console.log(`Success: ${description}`);
             }
