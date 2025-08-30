@@ -125,11 +125,11 @@ class LeaguepediaClientImpl(
 
     companion object {
         private val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-        private fun LocalDateTime.toZonedLocalDateTime(): LocalDateTime {
-            return this.atZone(ZoneId.of("UTC"))
+
+        private fun LocalDateTime.toZonedLocalDateTime(): LocalDateTime =
+            this
+                .atZone(ZoneId.of("UTC"))
                 .withZoneSameInstant(ZoneId.systemDefault())
                 .toLocalDateTime()
-        }
-
     }
 }
