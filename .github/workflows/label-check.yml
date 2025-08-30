@@ -9,6 +9,9 @@ on:
       - labeled
       - unlabeled
 
+env:
+  COMMIT_STATUS_CONTEXT: Required Label Check
+
 jobs:
   label-check:
     runs-on: ubuntu-latest
@@ -18,6 +21,20 @@ jobs:
         with:
           app-id: ${{ vars.GH_APP_ID }}
           private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+
+      - name: Set status to pending
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ steps.app-token.outputs.token }}
+          script: |
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.payload.pull_request.head.sha,
+              state: 'pending',
+              description: 'Checking for required labels...',
+              context: ${{ env.COMMIT_STATUS_CONTEXT }},
+            });
 
       - name: Remove semver labels from Dependabot PRs
         if: github.actor == 'dependabot[bot]'
@@ -51,11 +68,12 @@ jobs:
             if (matchingLabels.length !== 1) {
               const description = `One of the following labels is required: ${[...validLabels].join(', ')}. Found ${matchingLabels.length}.`;
               await github.rest.repos.createCommitStatus({
-                ...context.repo,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
                 sha: context.payload.pull_request.head.sha,
                 state: 'failure',
                 description: description,
-                context: 'Required Label Check',
+                context: ${{ env.COMMIT_STATUS_CONTEXT }},
                 target_url: `https://github.com/${owner}/${repo}/actions/runs/${context.runId}`,
               });
               core.setFailed(description);
@@ -63,11 +81,12 @@ jobs:
               const labelName = matchingLabels[0].name;
               const description = `Found valid label: "${labelName}".`;
               await github.rest.repos.createCommitStatus({
-                ...context.repo,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
                 sha: context.payload.pull_request.head.sha,
                 state: 'success',
                 description: description,
-                context: 'Required Label Check',
+                context: ${{ env.COMMIT_STATUS_CONTEXT }},
               });
               console.log(`Success: ${description}`);
             }
