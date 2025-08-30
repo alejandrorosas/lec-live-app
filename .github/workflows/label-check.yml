@@ -74,7 +74,7 @@ jobs:
                 state: 'failure',
                 description: description,
                 context: '${{ env.COMMIT_STATUS_CONTEXT }}',
-                target_url: `https://github.com/${owner}/${repo}/actions/runs/${context.runId}`,
+                target_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
               });
               core.setFailed(description);
             } else {
