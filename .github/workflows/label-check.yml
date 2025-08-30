@@ -1,0 +1,41 @@
+name: Label Check
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - labeled
+      - unlabeled
+
+permissions:
+  pull-requests: write
+
+jobs:
+  label-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Remove semver labels from Dependabot PRs
+        if: github.actor == 'dependabot[bot]'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const semverLabels = ['major', 'minor', 'patch'];
+            const prNumber = context.payload.pull_request.number;
+
+            for (const label of semverLabels) {
+              try {
+                await github.rest.issues.removeLabel({
+                  ...context.repo,
+                  issue_number: prNumber,
+                  name: label
+                });
+              } catch (_) {}
+            }
+
+      - uses: docker://agilepathway/pull-request-label-checker:latest
+        with:
+          one_of: major,minor,patch,dependencies,skip-changelog
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
