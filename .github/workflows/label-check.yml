@@ -33,7 +33,7 @@ jobs:
               sha: context.payload.pull_request.head.sha,
               state: 'pending',
               description: 'Checking for required labels...',
-              context: ${{ env.COMMIT_STATUS_CONTEXT }},
+              context: '${{ env.COMMIT_STATUS_CONTEXT }}',
             });
 
       - name: Remove semver labels from Dependabot PRs
@@ -73,7 +73,7 @@ jobs:
                 sha: context.payload.pull_request.head.sha,
                 state: 'failure',
                 description: description,
-                context: ${{ env.COMMIT_STATUS_CONTEXT }},
+                context: '${{ env.COMMIT_STATUS_CONTEXT }}',
                 target_url: `https://github.com/${owner}/${repo}/actions/runs/${context.runId}`,
               });
               core.setFailed(description);
@@ -86,7 +86,7 @@ jobs:
                 sha: context.payload.pull_request.head.sha,
                 state: 'success',
                 description: description,
-                context: ${{ env.COMMIT_STATUS_CONTEXT }},
+                context: '${{ env.COMMIT_STATUS_CONTEXT }}',
               });
               console.log(`Success: ${description}`);
             }
