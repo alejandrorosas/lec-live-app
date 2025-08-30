@@ -20,7 +20,6 @@ jobs:
         if: github.actor == 'dependabot[bot]'
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const semverLabels = ['major', 'minor', 'patch'];
             const prNumber = context.payload.pull_request.number;
@@ -35,7 +34,17 @@ jobs:
               } catch (_) {}
             }
 
-      - uses: docker://agilepathway/pull-request-label-checker:latest
+      - name: Check for exactly one version label
+        uses: actions/github-script@v7
         with:
-          one_of: major,minor,patch,dependencies,skip-changelog
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const validLabels = ['major', 'minor', 'patch', 'dependencies', 'skip-changelog'];
+            const prLabels = github.context.payload.pull_request.labels;
+
+            const matchingLabels = prLabels.filter(label => validLabels.has(label.name));
+
+            if (matchingLabels.length !== 1) {
+              core.setFailed(`One of the following labels is required: ${[...validLabels].join(', ')}. Found ${matchingLabels.length} matching labels.`);
+            } else {
+              console.log(`Success: Found exactly one valid label: "${matchingLabels[0].name}".`);
+            }
