@@ -51,9 +51,9 @@ jobs:
             if (matchingLabels.length !== 1) {
               const description = `One of the following labels is required: ${[...validLabels].join(', ')}. Found ${matchingLabels.length} matching labels.`;
               await github.rest.repos.createCommitStatus({
-                context.repo.owner,
-                context.repo.repo,
-                context.payload.pull_request.head.sha,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                sha: context.payload.pull_request.head.sha,
                 state: 'failure',
                 description: description,
                 context: 'Versioning Label',
@@ -63,9 +63,9 @@ jobs:
               const labelName = matchingLabels[0].name;
               const description = `Found valid label: "${labelName}".`;
               await github.rest.repos.createCommitStatus({
-                context.repo.owner,
-                context.repo.repo,
-                context.payload.pull_request.head.sha,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                sha: context.payload.pull_request.head.sha,
                 state: 'success',
                 description: description,
                 context: 'Versioning Label',
