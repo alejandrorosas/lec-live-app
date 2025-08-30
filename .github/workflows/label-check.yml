@@ -39,7 +39,7 @@ jobs:
         with:
           script: |
             const validLabels = ['major', 'minor', 'patch', 'dependencies', 'skip-changelog'];
-            const prLabels = github.context.payload.pull_request.labels;
+            const prLabels = context.payload.pull_request.labels;
 
             const matchingLabels = prLabels.filter(label => validLabels.has(label.name));
 
