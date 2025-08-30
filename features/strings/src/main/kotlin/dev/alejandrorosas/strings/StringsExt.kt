@@ -1,10 +1,13 @@
 package dev.alejandrorosas.strings
 
 import android.text.format.DateUtils
+import java.text.DateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.Date
+import java.util.Locale
 
 fun LocalDate.getReadableDateString(): String {
     val today = LocalDate.now()
@@ -26,6 +29,7 @@ fun LocalDate.getReadableDateString(): String {
 }
 
 fun LocalDateTime.getReadableTimeString(): String {
-    val formatter = DateTimeFormatter.ofPattern("HH:mm")
-    return this.format(formatter)
+    val timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault())
+    val date = Date.from(this.atZone(ZoneId.systemDefault()).toInstant())
+    return timeFormat.format(date)
 }

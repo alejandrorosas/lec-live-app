@@ -5,6 +5,7 @@ import dev.alejandrorosas.leaguepedia.contract.LeaguepediaClient
 import dev.alejandrorosas.leaguepedia.contract.LeaguepediaClient.Match
 import dev.alejandrorosas.leaguepedia.contract.LeaguepediaClient.Standings
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.ConcurrentHashMap
 
@@ -61,7 +62,7 @@ class LeaguepediaClientImpl(
                     team2Score = it.content["Team2Score"],
                     team1Image = it.content["Team1"]?.let { image -> getImageUrl(image, "square") },
                     team2Image = it.content["Team2"]?.let { image -> getImageUrl(image, "square") },
-                    date = LocalDateTime.parse(it.content["DateTime UTC"], dateTimeFormatter),
+                    date = LocalDateTime.parse(it.content["DateTime UTC"], dateTimeFormatter).toZonedLocalDateTime(),
                     winner = it.content["Winner"]?.toInt(),
                     tab = it.content["TournamentName"]!! + " " + it.content["Tab"] as String,
                     patch = it.content["Patch"],
@@ -94,7 +95,7 @@ class LeaguepediaClientImpl(
                     winner = it.content["Winner"]!!.toInt(),
                     gameLength = it.content["Gamelength"]!!,
                     patch = it.content["Patch"]!!,
-                    date = LocalDateTime.parse(it.content["DateTime_UTC"], dateTimeFormatter),
+                    date = LocalDateTime.parse(it.content["DateTime_UTC"], dateTimeFormatter).toZonedLocalDateTime(),
                 )
             }
 
@@ -124,5 +125,11 @@ class LeaguepediaClientImpl(
 
     companion object {
         private val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        private fun LocalDateTime.toZonedLocalDateTime(): LocalDateTime {
+            return this.atZone(ZoneId.of("UTC"))
+                .withZoneSameInstant(ZoneId.systemDefault())
+                .toLocalDateTime()
+        }
+
     }
 }
