@@ -79,7 +79,7 @@ jobs:
               console.log(`Failure: ${description}`);
             } else {
               const labelName = matchingLabels[0].name;
-              const description = `Found valid label: "${labelName}".`;
+              const description = `Found valid label: ${labelName}.`;
               await github.rest.repos.createCommitStatus({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -90,4 +90,5 @@ jobs:
               });
               console.log(`Success: ${description}`);
             }
+
 
