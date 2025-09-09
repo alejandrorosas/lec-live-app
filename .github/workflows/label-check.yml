@@ -76,7 +76,7 @@ jobs:
                 context: '${{ env.COMMIT_STATUS_CONTEXT }}',
                 target_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
               });
-              core.setFailed(description);
+              console.log(`Failure: ${description}`);
             } else {
               const labelName = matchingLabels[0].name;
               const description = `Found valid label: "${labelName}".`;
@@ -90,3 +90,4 @@ jobs:
               });
               console.log(`Success: ${description}`);
             }
+
