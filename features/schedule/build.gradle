@@ -20,6 +20,7 @@ dependencies {
     implementation libs.compose.ui.livedata
     implementation libs.compose.ui.tooling
     implementation libs.compose.material
+    implementation libs.compose.material.icons
     implementation libs.compose.navigation
     implementation libs.coil.compose
 }
