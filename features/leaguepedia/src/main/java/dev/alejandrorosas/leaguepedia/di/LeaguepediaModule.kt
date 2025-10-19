@@ -10,8 +10,13 @@ import dev.alejandrorosas.leaguepedia.api.LeaguepediaService
 import dev.alejandrorosas.leaguepedia.contract.LeaguepediaClient
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
+import okhttp3.JavaNetCookieJar
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import java.net.CookieHandler
+import java.net.CookieManager
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -26,11 +31,15 @@ class LeaguepediaModule {
         }
 
     @Provides
-    fun provideLeaguepediaService(): LeaguepediaService {
+    @Singleton
+    fun provideLeaguepediaService(
+        okHttpClient: OkHttpClient,
+    ): LeaguepediaService {
         val contentType = "application/json".toMediaType()
         val retrofit =
             Retrofit
                 .Builder()
+                .client(okHttpClient)
                 .baseUrl("https://lol.fandom.com/")
                 .addConverterFactory(json.asConverterFactory(contentType))
                 .build()
@@ -39,5 +48,15 @@ class LeaguepediaModule {
     }
 
     @Provides
-    fun provideLeaguepediaClient(leaguepediaService: LeaguepediaService): LeaguepediaClient = LeaguepediaClientImpl(leaguepediaService)
+    fun provideOkHttpClient(): OkHttpClient {
+        val cookieHandler: CookieHandler = CookieManager()
+        return OkHttpClient.Builder()
+            .cookieJar(JavaNetCookieJar(cookieHandler))
+            .build()
+    }
+
+    @Provides
+    fun provideLeaguepediaClient(
+        leaguepediaService: LeaguepediaService,
+    ): LeaguepediaClient = LeaguepediaClientImpl(leaguepediaService)
 }

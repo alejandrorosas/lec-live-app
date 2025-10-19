@@ -75,8 +75,9 @@ class LeaguepediaClientImpl(
             }
 
     @Suppress("ktlint:standard:max-line-length")
-    override suspend fun getGames(): List<LeaguepediaClient.Game> =
-        leaguepediaService
+    override suspend fun getGames(): List<LeaguepediaClient.Game> {
+        login()
+        return leaguepediaService
             .getCargoQuery(
                 tables = "Leagues,Tournaments,ScoreboardGames=SG,Teams=T1,Teams=T2",
                 fields = "T1.Short=Team1Name,SG.Team1=Team1,SG.Team1Kills=Team1Kills,T2.Short=Team2Name, SG.Team2=Team2, SG.Team2Kills=Team2Kills, SG.Winner=Winner, SG.Gamelength=Gamelength, SG.Patch=Patch, SG.DateTime_UTC=DateTime_UTC",
@@ -98,6 +99,7 @@ class LeaguepediaClientImpl(
                     date = LocalDateTime.parse(it.content["DateTime_UTC"], dateTimeFormatter).toZonedLocalDateTime(),
                 )
             }
+    }
 
     @Suppress("ktlint:standard:max-line-length")
     override suspend fun getStandings(): List<Standings> {
@@ -121,6 +123,14 @@ class LeaguepediaClientImpl(
                     image = it.content["Image"]?.let { image -> getImageUrl(image) },
                 )
             }
+    }
+
+    override suspend fun login() {
+        leaguepediaService.login(
+            name = "",
+            password = "",
+            token = leaguepediaService.getToken().query.tokens.logintoken,
+        )
     }
 
     companion object {

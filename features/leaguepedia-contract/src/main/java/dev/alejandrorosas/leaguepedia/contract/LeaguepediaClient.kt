@@ -42,6 +42,8 @@ interface LeaguepediaClient {
 
     suspend fun getStandings(): List<Standings>
 
+    suspend fun login()
+
     class Standings(
         val team: String,
         val place: String,
