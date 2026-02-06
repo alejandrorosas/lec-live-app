@@ -56,4 +56,4 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 compose-screenshot = { id = "com.android.compose.screenshot", version.ref = "screenshot"}
 dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-triplet-play = { id = "com.github.triplet.play", version = "3.13.0" }
+triplet-play = { id = "com.github.triplet.play", version = "4.0.0" }
