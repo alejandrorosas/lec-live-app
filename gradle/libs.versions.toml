@@ -1,7 +1,7 @@
 [versions]
-androidGradlePlugin = "8.13.2"
+androidGradlePlugin = "9.0.1"
 kotlin = "2.3.10"
-dagger = "2.58"
+dagger = "2.59.1"
 androidxComposeBom = "2026.02.00"
 hiltAndroidX = "1.3.0"
 screenshot = "0.0.1-alpha13"
@@ -56,4 +56,4 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 compose-screenshot = { id = "com.android.compose.screenshot", version.ref = "screenshot"}
 dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-triplet-play = { id = "com.github.triplet.play", version = "3.13.0" }
+triplet-play = { id = "com.github.triplet.play", version = "4.0.0" }
