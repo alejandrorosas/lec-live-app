@@ -24,6 +24,11 @@ android {
     }
 }
 
+tasks.withType(AbstractTestTask).configureEach {
+    // Prevent the task from failing when no tests are found for Android targets
+    failOnNoDiscoveredTests = false
+}
+
 dependencies {
     implementation libs.androidx.core
     implementation libs.dagger
