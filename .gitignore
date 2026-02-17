@@ -1,6 +1,7 @@
 *.iml
 .idea
 .externalNativeBuild
+.vscode
 
 build/
 captures/
