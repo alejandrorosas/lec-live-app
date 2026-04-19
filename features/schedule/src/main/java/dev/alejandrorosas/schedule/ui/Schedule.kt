@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import dev.alejandrorosas.core.ui.ErrorView
 import dev.alejandrorosas.strings.R.string
 
 @Composable
@@ -70,21 +71,7 @@ fun Screen(
         ) {
             val errorMessage = standingsUiState.errorMessage
             if (errorMessage != null) {
-                Column(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Text(
-                        text = errorMessage,
-                        color = MaterialTheme.colorScheme.error,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(16.dp),
-                    )
-                }
+                ErrorView(message = errorMessage)
             } else if (tabs.isNotEmpty()) {
                 ScrollableTabRow(selectedTabIndex = pagerState.currentPage) {
                     tabs.forEachIndexed { index, item ->
