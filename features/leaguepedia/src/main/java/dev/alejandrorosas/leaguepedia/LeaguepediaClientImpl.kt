@@ -1,10 +1,12 @@
 package dev.alejandrorosas.leaguepedia
 
 import dev.alejandrorosas.leaguepedia.api.LeaguepediaService
+import dev.alejandrorosas.leaguepedia.api.LeaguepediaService.ApiError
 import dev.alejandrorosas.leaguepedia.contract.LeaguepediaClient
 import dev.alejandrorosas.leaguepedia.contract.LeaguepediaClient.Game
 import dev.alejandrorosas.leaguepedia.contract.LeaguepediaClient.Match
 import dev.alejandrorosas.leaguepedia.contract.LeaguepediaClient.Standings
+import java.io.IOException
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -20,7 +22,8 @@ class LeaguepediaClientImpl(
         if (uncached.isNotEmpty()) {
             val titles = uncached.joinToString("|") { "File:$it" }
             val response = leaguepediaService.getImageInfo(titles)
-            response.query.pages.values.forEach { page ->
+            response.error?.let { throwApiError(it) }
+            response.query?.pages?.values?.forEach { page ->
                 val title = page.title?.removePrefix("File:") ?: return@forEach
                 val url = page.imageInfo?.firstOrNull()?.url ?: return@forEach
                 imagesCache[title] = url
@@ -42,14 +45,16 @@ class LeaguepediaClientImpl(
 
     @Suppress("ktlint:standard:max-line-length")
     override suspend fun getMatches(): List<Match> {
-        val cargoResults = leaguepediaService
+        val response = leaguepediaService
             .getCargoQuery(
                 tables = "Tournaments,MatchSchedule,Teams=T1,Teams=T2,Leagues",
                 fields = "T1.Short=Team1Name,T2.Short=Team2Name,Team1,Team2,Team1Score,Team2Score,DateTime_UTC,Winner,Tab,Patch,Casters,Stream,N_Page,N_TabInPage,N_MatchInTab,N_MatchInPage,MatchDay,BestOf,Tournaments.StandardName=TournamentName",
                 where = "Tournaments.Region='EMEA' AND Leagues.League_Short='LEC'",
                 joinOn = "MatchSchedule.OverviewPage=Tournaments.OverviewPage, MatchSchedule.Team1=T1.OverviewPage, MatchSchedule.Team2=T2.OverviewPage, Tournaments.League=Leagues.League",
                 orderBy = "DateTime_UTC DESC",
-            ).cargoquery
+            )
+        response.error?.let { throwApiError(it) }
+        val cargoResults = response.cargoquery
 
         val teamNames = cargoResults.flatMapTo(mutableSetOf()) {
             listOfNotNull(it.content["Team1"], it.content["Team2"])
@@ -79,14 +84,16 @@ class LeaguepediaClientImpl(
 
     @Suppress("ktlint:standard:max-line-length")
     override suspend fun getGames(): List<Game> {
-        val cargoResults = leaguepediaService
+        val response = leaguepediaService
             .getCargoQuery(
                 tables = "Leagues,Tournaments,ScoreboardGames=SG,Teams=T1,Teams=T2",
                 fields = "T1.Short=Team1Name,SG.Team1=Team1,SG.Team1Kills=Team1Kills,T2.Short=Team2Name, SG.Team2=Team2, SG.Team2Kills=Team2Kills, SG.Winner=Winner, SG.Gamelength=Gamelength, SG.Patch=Patch, SG.DateTime_UTC=DateTime_UTC",
                 where = "Tournaments.Region='EMEA' AND Leagues.League_Short='LEC'",
                 joinOn = "Tournaments.League=Leagues.League, Tournaments.OverviewPage=SG.OverviewPage, SG.Team1=T1.OverviewPage, SG.Team2=T2.OverviewPage",
                 orderBy = "SG.DateTime_UTC DESC",
-            ).cargoquery
+            )
+        response.error?.let { throwApiError(it) }
+        val cargoResults = response.cargoquery
 
         val teamNames = cargoResults.flatMapTo(mutableSetOf()) {
             listOfNotNull(it.content["Team1"], it.content["Team2"])
@@ -111,14 +118,16 @@ class LeaguepediaClientImpl(
 
     @Suppress("ktlint:standard:max-line-length")
     override suspend fun getStandings(): List<Standings> {
-        val cargoResults = leaguepediaService
+        val response = leaguepediaService
             .getCargoQuery(
                 tables = "Tournaments,Standings,Teams",
                 fields = "Standings.OverviewPage,Standings.Team,Place,Standings.WinGames,Standings.LossGames,Image,Tournaments.IsPlayoffs",
                 where = "Tournaments.League='LVP Superliga' AND SplitNumber=1 AND Year='2025' AND NOT Tournaments.IsPlayoffs",
                 joinOn = "Standings.Team=Teams.OverviewPage,Tournaments.OverviewPage=Standings.OverviewPage",
                 orderBy = "N",
-            ).cargoquery
+            )
+        response.error?.let { throwApiError(it) }
+        val cargoResults = response.cargoquery
 
         val imageNames = cargoResults.mapNotNull { it.content["Image"] }
         val imageMap = getImageUrls(imageNames)
@@ -145,5 +154,9 @@ class LeaguepediaClientImpl(
                 .atZone(ZoneId.of("UTC"))
                 .withZoneSameInstant(ZoneId.systemDefault())
                 .toLocalDateTime()
+
+        private fun throwApiError(error: ApiError): Nothing {
+            throw IOException(error.info)
+        }
     }
 }

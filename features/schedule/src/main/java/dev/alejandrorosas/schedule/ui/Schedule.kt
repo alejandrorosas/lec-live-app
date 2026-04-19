@@ -68,7 +68,23 @@ fun Screen(
                     .fillMaxWidth()
                     .fillMaxHeight(),
         ) {
-            if (tabs.isNotEmpty()) {
+            val errorMessage = standingsUiState.errorMessage
+            if (errorMessage != null) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Text(
+                        text = errorMessage,
+                        color = MaterialTheme.colorScheme.error,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(16.dp),
+                    )
+                }
+            } else if (tabs.isNotEmpty()) {
                 ScrollableTabRow(selectedTabIndex = pagerState.currentPage) {
                     tabs.forEachIndexed { index, item ->
                         Tab(

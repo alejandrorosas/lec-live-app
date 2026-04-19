@@ -22,6 +22,7 @@ class ScheduleViewModel @Inject constructor(
         val selectedTabIndex: Int = 0,
         val tabs: List<String> = emptyList(),
         val matches: Map<String, List<Match>> = emptyMap(),
+        val errorMessage: String? = null,
     )
 
     data class Match(
@@ -46,7 +47,7 @@ class ScheduleViewModel @Inject constructor(
     }
 
     fun refresh() {
-        _uiState.value = _uiState.value.copy(isRefreshing = true)
+        _uiState.value = _uiState.value.copy(isRefreshing = true, errorMessage = null)
         updateState()
     }
 
@@ -88,6 +89,10 @@ class ScheduleViewModel @Inject constructor(
                     )
             } catch (e: Exception) {
                 e.printStackTrace()
+                _uiState.value = _uiState.value.copy(
+                    isRefreshing = false,
+                    errorMessage = e.message ?: "An unknown error occurred",
+                )
             }
         }
     }

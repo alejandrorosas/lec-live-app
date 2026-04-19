@@ -17,6 +17,7 @@ class ResultsViewModel @Inject constructor(
     data class ResultsUiState(
         val isRefreshing: Boolean = true,
         val standings: List<Standings> = emptyList(),
+        val errorMessage: String? = null,
     )
 
     data class Standings(
@@ -39,14 +40,13 @@ class ResultsViewModel @Inject constructor(
     }
 
     fun refresh() {
-        _uiState.value = _uiState.value.copy(isRefreshing = true)
+        _uiState.value = _uiState.value.copy(isRefreshing = true, errorMessage = null)
         updateState()
     }
 
     private fun updateState() {
         viewModelScope.launch {
             try {
-//                val standings = leaguepediaClient.getStandings()
                 val games = leaguepediaClient.getGames()
 
                 _uiState.value =
@@ -68,6 +68,10 @@ class ResultsViewModel @Inject constructor(
                     )
             } catch (e: Exception) {
                 e.printStackTrace()
+                _uiState.value = _uiState.value.copy(
+                    isRefreshing = false,
+                    errorMessage = e.message ?: "An unknown error occurred",
+                )
             }
         }
     }
