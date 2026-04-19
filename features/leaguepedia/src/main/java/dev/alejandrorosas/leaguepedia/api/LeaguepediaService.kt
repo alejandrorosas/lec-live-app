@@ -22,12 +22,20 @@ interface LeaguepediaService {
 
     @Serializable
     class CargoResponse(
-        @SerialName("cargoquery") val cargoquery: List<CargoQueryItem>,
+        @SerialName("cargoquery") val cargoquery: List<CargoQueryItem> = emptyList(),
+        @SerialName("error") val error: ApiError? = null,
     )
 
     @Serializable
     class QueryResponse(
-        @SerialName("query") val query: QueryPages,
+        @SerialName("query") val query: QueryPages? = null,
+        @SerialName("error") val error: ApiError? = null,
+    )
+
+    @Serializable
+    class ApiError(
+        @SerialName("code") val code: String,
+        @SerialName("info") val info: String,
     )
 
     @Serializable
@@ -37,7 +45,8 @@ interface LeaguepediaService {
 
     @Serializable
     class QueryPage(
-        @SerialName("imageinfo") val imageInfo: List<ImageInfo>,
+        @SerialName("title") val title: String? = null,
+        @SerialName("imageinfo") val imageInfo: List<ImageInfo>? = null,
     )
 
     @Serializable

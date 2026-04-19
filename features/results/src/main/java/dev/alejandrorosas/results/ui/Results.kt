@@ -28,9 +28,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import dev.alejandrorosas.core.ui.ErrorView
 
 @Composable
 fun Results(
@@ -55,9 +56,14 @@ fun Screen(
         onRefresh = resultsViewModel::refresh,
         state = rememberPullToRefreshState(),
     ) {
-        ResultsList(
-            items = standings,
-        )
+        val errorMessage = homeUiState.errorMessage
+        if (errorMessage != null) {
+            ErrorView(message = errorMessage)
+        } else {
+            ResultsList(
+                items = standings,
+            )
+        }
     }
 }
 
