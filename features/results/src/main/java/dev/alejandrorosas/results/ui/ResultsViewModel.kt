@@ -68,10 +68,11 @@ class ResultsViewModel @Inject constructor(
                     )
             } catch (e: Exception) {
                 e.printStackTrace()
-                _uiState.value = _uiState.value.copy(
-                    isRefreshing = false,
-                    errorMessage = e.message ?: "An unknown error occurred",
-                )
+                _uiState.value =
+                    _uiState.value.copy(
+                        isRefreshing = false,
+                        errorMessage = e.message ?: "An unknown error occurred",
+                    )
             }
         }
     }
