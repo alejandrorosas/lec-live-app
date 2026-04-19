@@ -14,7 +14,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
@@ -33,7 +33,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import dev.alejandrorosas.core.ui.ErrorView
@@ -73,7 +73,7 @@ fun Screen(
             if (errorMessage != null) {
                 ErrorView(message = errorMessage)
             } else if (tabs.isNotEmpty()) {
-                ScrollableTabRow(selectedTabIndex = pagerState.currentPage) {
+                PrimaryScrollableTabRow(selectedTabIndex = pagerState.currentPage) {
                     tabs.forEachIndexed { index, item ->
                         Tab(
                             selected = index == pagerState.currentPage,
