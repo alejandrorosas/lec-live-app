@@ -3,7 +3,7 @@ package dev.alejandrorosas.leaguepedia.contract
 import java.time.LocalDateTime
 
 interface LeaguepediaClient {
-    suspend fun getImageUrl(image: String): String?
+    suspend fun getImageUrls(images: List<String>): Map<String, String>
 
     suspend fun getMatches(): List<Match>
 

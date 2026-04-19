@@ -37,7 +37,8 @@ interface LeaguepediaService {
 
     @Serializable
     class QueryPage(
-        @SerialName("imageinfo") val imageInfo: List<ImageInfo>,
+        @SerialName("title") val title: String? = null,
+        @SerialName("imageinfo") val imageInfo: List<ImageInfo>? = null,
     )
 
     @Serializable
