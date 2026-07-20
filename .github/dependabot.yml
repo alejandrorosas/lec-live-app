@@ -17,4 +17,4 @@ registries:
   maven-google:
     type: "maven-repository"
     url: "https://maven.google.com"
-    replaces-base: true
+    replaces-base: false
