@@ -13,23 +13,41 @@ categories:
   - title: 'Maintenance'
     labels:
       - 'chore'
+  - title: 'Dependency Updates'
+    collapse-after: 0
+    labels:
       - 'dependencies'
-exclude-labels:
-  - 'skip-changelog'
+  - type: pre-exclude
+    when:
+      label: 'skip-changelog'
+  - type: version-resolver
+    semver-increment: patch
+    exclusive: true
+    when:
+      label: 'dependencies'
+  - type: version-resolver
+    semver-increment: major
+    when:
+      label: 'major'
+  - type: version-resolver
+    semver-increment: minor
+    when:
+      label: 'minor'
+  - type: version-resolver
+    semver-increment: patch
+    when:
+      label: 'patch'
+  - type: version-resolver
+    semver-increment: patch
+
 change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
-change-title-escapes: '\<*_&'
-version-resolver:
-  major:
-    labels:
-      - 'major'
-  minor:
-    labels:
-      - 'minor'
-  patch:
-    labels:
-      - 'patch'
-  default: patch
 template: |
-  ## Changes
+  # What's Changed
 
   $CHANGES
+
+  ## New Contributors
+
+  $NEW_CONTRIBUTORS
+
+  **Full Changelog**: https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...$RESOLVED_VERSION
