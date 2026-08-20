@@ -5,7 +5,7 @@ dagger = "2.60.1"
 androidxComposeBom = "2026.08.00"
 hiltAndroidX = "1.4.0"
 screenshot = "0.0.1-alpha16"
-okhttp = "5.4.0"
+okhttp = "5.5.0"
 
 [libraries]
 ktlint-cli = { group = "com.pinterest.ktlint", name = "ktlint-cli", version = "1.8.0" }
