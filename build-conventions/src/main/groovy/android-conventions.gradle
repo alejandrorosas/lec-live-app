@@ -9,7 +9,7 @@ repositories {
 }
 
 android {
-    compileSdk = 37
+    compileSdk = 37.1
 
     defaultConfig {
         minSdk = 26
