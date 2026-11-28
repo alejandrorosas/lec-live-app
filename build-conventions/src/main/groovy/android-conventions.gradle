@@ -9,11 +9,11 @@ repositories {
 }
 
 android {
-    compileSdk = 37
+    compileSdk = 37.1
 
     defaultConfig {
         minSdk = 26
-        targetSdk = 37
+        targetSdk = 37.1
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
